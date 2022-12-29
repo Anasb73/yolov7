@@ -2,9 +2,8 @@ import numpy as np
 import random
 import torch
 import torch.nn as nn
-
-from models.common import Conv, DWConv
-from utils.google_utils import attempt_download
+from caryle.yolov7.yolov7.models.common import Conv, DWConv
+from caryle.yolov7.yolov7.utils.google_utils import attempt_download
 
 
 class CrossConv(nn.Module):
