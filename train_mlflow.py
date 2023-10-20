@@ -35,15 +35,17 @@ from utils.plots import plot_images, plot_labels, plot_results, plot_evolution
 from utils.torch_utils import ModelEMA, select_device, intersect_dicts, torch_distributed_zero_first, is_parallel
 from utils.wandb_logging.wandb_utils import WandbLogger, check_wandb_resume
 import mlflow
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
 
 def train(hyp, opt, device, tb_writer=None):
-    index = 0
-    #mlflow.set_tracking_uri("https://gitlab.asygn.com/api/v4/projects/264/ml/mlflow")
+    current_datetime = datetime.now().strftime("%Y/%m/%d")
+
+    mlflow.set_tracking_uri("https://gitlab.asygn.com/api/v4/projects/264/ml/mlflow")
     mlflow.set_experiment('yolov7')
-    with mlflow.start_run(run_name=f"Candidate {index}"):
+    with mlflow.start_run(run_name=f"Yolov7 train_{current_datetime}"):
 
         logger.info(colorstr('hyperparameters: ') + ', '.join(f'{k}={v}' for k, v in hyp.items()))
         save_dir, epochs, batch_size, total_batch_size, weights, rank, freeze = \
@@ -542,8 +544,8 @@ def train(hyp, opt, device, tb_writer=None):
             dist.destroy_process_group()
         torch.cuda.empty_cache()
         if os.getenv('GITLAB_CI'):
-            print("os.getenv('GITLAB_CI'):", os.getenv('GITLAB_CI'))
             mlflow.set_tag('gitlab.CI_JOB_ID', os.getenv('CI_JOB_ID'))
+            mlflow.set_experiment_tag('gitlab.GITLAB_USER_NAME', os.getenv('GITLAB_USER_NAME'))
         return results,final
 
 
