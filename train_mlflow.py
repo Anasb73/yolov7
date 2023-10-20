@@ -36,7 +36,6 @@ from utils.torch_utils import ModelEMA, select_device, intersect_dicts, torch_di
 from utils.wandb_logging.wandb_utils import WandbLogger, check_wandb_resume
 import mlflow
 from datetime import datetime
-import caryle.yolov7.yolov7.export
 
 logger = logging.getLogger(__name__)
 
