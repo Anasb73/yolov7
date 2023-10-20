@@ -614,7 +614,7 @@ if __name__ == '__main__':
     
 
     index = 0
-    mlflow.set_tracking_uri("https://gitlab.asygn.com/api/v4/projects/264/ml/mlflow")
+    #mlflow.set_tracking_uri("https://gitlab.asygn.com/api/v4/projects/264/ml/mlflow")
     mlflow.set_experiment('yolov7')
     with mlflow.start_run(run_name=f"Candidate {index}"):
 
