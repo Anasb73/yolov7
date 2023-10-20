@@ -528,7 +528,7 @@ def train(hyp, opt, device, tb_writer=None):
     else:
         dist.destroy_process_group()
     torch.cuda.empty_cache()
-    return results
+    return results,final
 
 
 if __name__ == '__main__':
@@ -626,7 +626,13 @@ if __name__ == '__main__':
                 prefix = colorstr('tensorboard: ')
                 logger.info(f"{prefix}Start with 'tensorboard --logdir {opt.project}', view at http://localhost:6006/")
                 tb_writer = SummaryWriter(opt.save_dir)  # Tensorboard
-            train(hyp, opt, device, tb_writer)
+            results,final = train(hyp, opt, device, tb_writer)
+            mlflow.log_metric("Precision", results[0])
+            mlflow.log_metric("Recall", results[1])
+            mlflow.log_metric("mAP@.5", results[2])
+            mlflow.log_metric("mAP@.5-.95", results[3])
+            mlflow.log_metric("val_loss", results[4])
+            mlflow.sklearn.log_model(final, "")
 
         # Evolve hyperparameters (optional)
         else:
@@ -708,12 +714,6 @@ if __name__ == '__main__':
 
                 # Train mutation
                 results = train(hyp.copy(), opt, device)
-                #results = (0, 0, 0, 0, 0, 0, 0)  # P, R, mAP@.5, mAP@.5-.95, val_loss(box, obj, cls)
-                mlflow.log_metric("Precision", results[0])
-                mlflow.log_metric("Recall", results[1])
-                mlflow.log_metric("mAP@.5", results[2])
-                mlflow.log_metric("mAP@.5-.95", results[3])
-                mlflow.log_metric("val_loss", results[4])
                 # Write mutation results
                 print_mutation(hyp.copy(), results, yaml_file, opt.bucket)
 
