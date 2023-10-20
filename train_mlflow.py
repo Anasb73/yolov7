@@ -530,9 +530,7 @@ def train(hyp, opt, device, tb_writer=None):
             for f in last, best:
                 if f.exists():
                     strip_optimizer(f)  # strip optimizers
-            returned_model = torch.load(final, map_location=torch.device('cpu'))
-            mlflow.pytorch.log_model(returned_model["model"], "model")
-            #mlflow.log_artifact(str(final), "", returned_model)
+            mlflow.log_artifact(final, "")  
             if opt.bucket:
                 os.system(f'gsutil cp {final} gs://{opt.bucket}/weights')  # upload
             if wandb_logger.wandb and not opt.evolve:  # Log the stripped model
@@ -543,9 +541,8 @@ def train(hyp, opt, device, tb_writer=None):
         else:
             dist.destroy_process_group()
         torch.cuda.empty_cache()
-            # Start of snippet to be included
-            
         if os.getenv('GITLAB_CI'):
+            print("os.getenv('GITLAB_CI'):", os.getenv('GITLAB_CI'))
             mlflow.set_tag('gitlab.CI_JOB_ID', os.getenv('CI_JOB_ID'))
         return results,final
 
