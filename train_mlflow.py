@@ -43,7 +43,7 @@ logger = logging.getLogger(__name__)
 def train(hyp, opt, device, tb_writer=None):
     current_datetime = datetime.now().strftime("%Y/%m/%d")
 
-    mlflow.set_tracking_uri("https://gitlab.asygn.com/api/v4/projects/264/ml/mlflow")
+    #mlflow.set_tracking_uri("https://gitlab.asygn.com/api/v4/projects/264/ml/mlflow")
     mlflow.set_experiment('yolov7')
     with mlflow.start_run(run_name=f"Yolov7 train_{current_datetime}"):
 
