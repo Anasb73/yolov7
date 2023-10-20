@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 
 def train(hyp, opt, device, tb_writer=None):
     index = 0
-    mlflow.set_tracking_uri("https://gitlab.asygn.com/api/v4/projects/264/ml/mlflow")
+    #mlflow.set_tracking_uri("https://gitlab.asygn.com/api/v4/projects/264/ml/mlflow")
     mlflow.set_experiment('yolov7')
     with mlflow.start_run(run_name=f"Candidate {index}"):
 
