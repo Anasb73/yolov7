@@ -36,6 +36,7 @@ from utils.torch_utils import ModelEMA, select_device, intersect_dicts, torch_di
 from utils.wandb_logging.wandb_utils import WandbLogger, check_wandb_resume
 import mlflow
 from datetime import datetime
+import caryle.yolov7.yolov7.export
 
 logger = logging.getLogger(__name__)
 
@@ -532,7 +533,7 @@ def train(hyp, opt, device, tb_writer=None):
             for f in last, best:
                 if f.exists():
                     strip_optimizer(f)  # strip optimizers
-            mlflow.log_artifact(final, "")  
+            mlflow.log_artifact(final, "")
             if opt.bucket:
                 os.system(f'gsutil cp {final} gs://{opt.bucket}/weights')  # upload
             if wandb_logger.wandb and not opt.evolve:  # Log the stripped model
@@ -545,6 +546,7 @@ def train(hyp, opt, device, tb_writer=None):
         torch.cuda.empty_cache()
         if os.getenv('GITLAB_CI'):
             mlflow.set_tag('gitlab.CI_JOB_ID', os.getenv('CI_JOB_ID'))
+            print("os.getenv('GITLAB_USER_NAME'):", os.getenv('GITLAB_USER_NAME'))
             mlflow.set_experiment_tag('gitlab.GITLAB_USER_NAME', os.getenv('GITLAB_USER_NAME'))
         return results,final
 
