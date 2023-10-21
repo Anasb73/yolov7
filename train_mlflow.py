@@ -439,6 +439,12 @@ def train(hyp, opt, device, tb_writer=None):
                                                     compute_loss=compute_loss,
                                                     is_coco=is_coco,
                                                     v5_metric=opt.v5_metric)
+                    
+                    mlflow.log_metric("Precision", results[0])
+                    mlflow.log_metric("Recall", results[1])
+                    mlflow.log_metric("mAP@.5", results[2])
+                    mlflow.log_metric("mAP@.5-.95", results[3])
+                    mlflow.log_metric("val_loss", results[4])                                
 
                 # Write
                 with open(results_file, 'a') as f:
@@ -521,11 +527,11 @@ def train(hyp, opt, device, tb_writer=None):
                                             v5_metric=opt.v5_metric)
 
                     # End of snippet to be included
-            mlflow.log_metric("Precision", results[0])
-            mlflow.log_metric("Recall", results[1])
-            mlflow.log_metric("mAP@.5", results[2])
-            mlflow.log_metric("mAP@.5-.95", results[3])
-            mlflow.log_metric("val_loss", results[4])
+            # mlflow.log_metric("Precision", results[0])
+            # mlflow.log_metric("Recall", results[1])
+            # mlflow.log_metric("mAP@.5", results[2])
+            # mlflow.log_metric("mAP@.5-.95", results[3])
+            # mlflow.log_metric("val_loss", results[4])
             
             # Strip optimizers
             final = best if best.exists() else last  # final model
@@ -545,8 +551,8 @@ def train(hyp, opt, device, tb_writer=None):
         torch.cuda.empty_cache()
         if os.getenv('GITLAB_CI'):
             mlflow.set_tag('gitlab.CI_JOB_ID', os.getenv('CI_JOB_ID'))
-            print("os.getenv('GITLAB_USER_LOGIN'):", os.getenv('GITLAB_USER_LOGIN'))
-            mlflow.set_tag('gitlab.GITLAB_USER_LOGIN', os.getenv('GITLAB_USER_LOGIN'))
+            # print("os.getenv('GITLAB_USER_LOGIN'):", os.getenv('GITLAB_USER_LOGIN'))
+            # mlflow.set_tag('gitlab.GITLAB_USER_LOGIN', os.getenv('GITLAB_USER_LOGIN'))
         return results,final
 
 
