@@ -47,7 +47,7 @@ def train(hyp, opt, device, tb_writer=None):
     mlflow.set_experiment('yolov7 training axle detection')
     if os.getenv('GITLAB_CI'):
         mlflow.set_tag('gitlab.CI_JOB_ID', os.getenv('CI_JOB_ID'))
-    with mlflow.start_run(run_name=f"Yolov7 train_{current_datetime}"):
+    with mlflow.start_run(run_name=f"Yolov7 train_axle_detection_{current_datetime}"):
 
         logger.info(colorstr('hyperparameters: ') + ', '.join(f'{k}={v}' for k, v in hyp.items()))
         save_dir, epochs, batch_size, total_batch_size, weights, rank, freeze = \
