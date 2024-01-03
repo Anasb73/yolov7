@@ -44,9 +44,11 @@ def train(hyp, opt, device, tb_writer=None):
     current_datetime = datetime.now().strftime("%Y/%m/%d/%H:%M%S")
 
     mlflow.set_tracking_uri("https://gitlab.asygn.com/api/v4/projects/264/ml/mlflow")
-    mlflow.set_experiment('yolov7 training axle detection')
+    mlflow.set_experiment('yolov7x training axle detection')
     if os.getenv('GITLAB_CI'):
         mlflow.set_tag('gitlab.CI_JOB_ID', os.getenv('CI_JOB_ID'))
+    if mlflow.active_run():
+        mlflow.end_run()
     with mlflow.start_run(run_name=f"Yolov7 train_axle_detection_{current_datetime}"):
 
         logger.info(colorstr('hyperparameters: ') + ', '.join(f'{k}={v}' for k, v in hyp.items()))
